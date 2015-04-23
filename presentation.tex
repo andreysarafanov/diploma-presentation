@@ -7,19 +7,23 @@
 }
 
 \input{packages}
-
+\addtobeamertemplate{navigation symbols}{}{%
+    \usebeamerfont{footline}%
+    \usebeamercolor[fg]{footline}%
+    \hspace{1em}%
+    \large{\insertframenumber/\inserttotalframenumber}
+}
 \newcommand{\bs}{\textbackslash}
 
-\title {Некоторые алгоритмы, основанные на графовом представлении бесконтекстных языков}
+\title []{Некоторые алгоритмы, основанные на графовом представлении бесконтекстных языков}
 
-\author {Сарафанов Андрей \\ \small{группа 524}}
+\author {Сарафанов Андрей \\ \small{группа 524\\ \vspace{1cm}Научный руководитель:\\
+  к.ф.-м.н. Вылиток Алексей Александрович\\}}
 
-\institute {\small{
-  Научный руководитель:\\
-  к.ф.-м.н. Вылиток Алексей Александрович\\
-  %Факультет вычислительной математики и кибернетики\\
-  %МГУ им. Ломоносова
-}}
+%\institute {\small{
+%%  Факультет вычислительной математики и кибернетики\\
+%  МГУ им. Ломоносова
+%}}
 
 \date {\footnotesize{Москва, 2015}}
 \begin{document}
@@ -31,6 +35,82 @@
 \begin{frame} {Формальные языки}
 Пусть задан алфавит $\Sigma$ - конечное непустое множество символов.\\
 \textit{Формальный язык} - множество $L, L\subseteq \Sigma^*$.
+\vspace{5mm} %5mm vertical space
+\begin{columns}
+  \column[T]{.55\textwidth}
+    Иерархия формальных языков:
+    \begin{enumerate}
+      \setcounter{enumi}{-1}
+      \item Рекурсивно-перечислимые
+      \item Контекстно-зависимые
+      \item Бесконтекстные
+        \begin{itemize}
+          \item Детерминированные
+          \item Недетерминированные
+        \end{itemize}
+      \item Регулярные
+    \end{enumerate}
+  \column[T]{.45\textwidth}
+    Способы описания формальных языков:
+    \begin{itemize}
+      \item Грамматики
+      \item Автоматы
+      \item Морфические представления
+      \item Графы
+    \end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Представление языков в форме L-графов}
+L-графы --- способ описания бесконтекстных и регулярных языков. Основаны на графовых описаниях, введенных в работых Станевичене Л.И.
+\begin{columns}
+  \column[T]{.55\textwidth}
+    L-граф для языка $a^nbc^{n-1}$
+    \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=1cm, scale=0.8,
+      thick,main node/.style={circle,fill=blue!20,draw,font=\sffamily\Large\bfseries},invis node/.style={draw=none}]
+      \node[initial,state] (1) {1};
+      \node[state,accepting] (2) [right= of 1] {2};
+
+      \path[every node/.style={font=\sffamily\small}]
+        (1) edge node {b|)} (2)
+            edge [loop above] node {a|(} (1)
+        (2) edge [loop above] node {c|)} (2);
+    \end{tikzpicture}
+  \column[T]{.45\textwidth}
+    Примеры путей:\\
+    \LARGE{$1\frac{a}{(}1\frac{a}{(}1\frac{b}{)}2\frac{c}{)}2$}
+    \vspace{0.8cm}
+    \LARGE{$1\frac{a}{(}1\frac{a}{(}1\frac{a}{(}1\frac{b}{)}2\frac{c}{)}2$}\\
+\end{columns}
+У каждого пути есть скобочная пометка $\mu(T)$ и буквенная пометка $\omega(T)$. Если скобочная пометка пути $T$ - правильная скобочная последовательность, назовём $T$ маршрутом. Тогда язык L-графа G: $L(G) = \{\omega(T)|T-$маршрут из начальной вершины G в конечную$\}$.
+\end{frame}
+
+\begin{frame} {Классификация L-графов}
+\begin{itemize}
+  \item Бесконтекстные L-графы\\
+    Содержат скобочные пометки, эквивалентны магазинным автоматам. Делятся на:
+    \begin{itemize}
+      \item Детерминированные бесконтекстные L-графы
+      \item Недетерминированные бесконтекстные L-графы
+    \end{itemize}
+  \item Регулярные L-графы\\
+  Не содержат скобочных пометок, представляют из себя графы конечных автоматов. Делятся на\\
+  \begin{itemize}
+      \item Детерминированные регулярные L-графы
+      \item Недетерминированные регулярные L-графы
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame} {Проблема регулярности магазинных автоматов}
+Пусть $M$ - некий МА. Существует ли конечный автомат $A \text{ такой, что } L(A)=L(M)$?
+Эта задача неразрешима.\\
+\vspace{0.5cm}
+Пусть теперь $M$ - некий ДМА c $q$ состояниями и $t$ магазинными символами.
+  \begin{itemize}
+    \item Разрешимость этой суженной задачи показана в работе Stearns, 1967. Верхняя оценка числа состояний эквивалентного конечного автомата составила {\LARGE$t^{q^{q^q}}$\par}
+    \item В работе Valiant, 1975 эта оценка улучшена до {\LARGE$qt^{2qt(q^2q!)^q}$\par}
+  \end{itemize}
 \end{frame}
 
 \begin{frame} {Цели работы}
