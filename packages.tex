@@ -9,8 +9,11 @@
 \usepackage{tikz}
 \usepackage{calc}
 \usepackage{amsfonts}
+\usepackage[normalem]{ulem}
 \usetikzlibrary{arrows,positioning, automata}
 \def\checkmark{\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;} 
 \def\scalecheck{\resizebox{\widthof{\checkmark}*\ratio{\widthof{x}}{\widthof{\normalsize x}}}{!}{\checkmark}}
-
+\newcommand{\unsure}[1]{
+	\textcolor{red}{#1}
+}
 %\usepackage{enumitem}
